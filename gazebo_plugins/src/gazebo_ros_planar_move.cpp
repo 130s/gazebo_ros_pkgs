@@ -159,13 +159,14 @@ namespace gazebo
   // Update the controller
   void GazeboRosPlanarMove::UpdateChild() 
   {
+	parent_->SetGravityMode(true);
     boost::mutex::scoped_lock scoped_lock(lock);
     math::Pose pose = parent_->GetWorldPose();
     float yaw = pose.rot.GetYaw();
     parent_->SetLinearVel(math::Vector3(
           x_ * cosf(yaw) - y_ * sinf(yaw), 
-          y_ * cosf(yaw) + x_ * sinf(yaw), 
-          0));
+          y_ * cosf(yaw) + x_ * sinf(yaw),
+          -0.1));
     parent_->SetAngularVel(math::Vector3(0, 0, rot_));
     if (odometry_rate_ > 0.0) {
       common::Time current_time = parent_->GetWorld()->GetSimTime();
